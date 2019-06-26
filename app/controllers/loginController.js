@@ -5,6 +5,32 @@ var jwt = require('jsonwebtoken');
 var bcrypt = require('bcrypt');
 var app = express();
 
+
+
+router.post('/profile', (req, res) => {
+    User.findOne({
+        _id: req.body._id
+    }, function(err, user) {
+        if (err) {
+            res.json({ 'Success': 'Post Failed Something is wrong. Log in first!!1' });
+        } else if (!user) {
+            res.json({ 'Success': 'Post Failed Something is wrong. Log in first!!2' });
+        } else if (user) {
+
+            if (user.username == req.body.username) {
+                res.json(user);
+            } else {
+                res.json({ 'Success': 'Authentication Failed!!' });
+            }
+        }
+
+    });
+
+});
+
+
+
+
 router.post('/authenticate', function(req, res) {
     var response = res;
     console.log(req.body);
@@ -141,6 +167,19 @@ router.use(function(req, res, next) {
 
     }
 
+});
+
+router.post('/edtProfile', (req, res) => {
+    var all_data = req.body;
+    all_data.password = bcrypt.hashSync(all_data.password, 10);
+    all_data.passwordConf = all_data.password;
+    User.findOneAndUpdate({ _id: req.body._id }, all_data, { new: true }, (err, doc) => {
+        if (!err) {
+            res.json({ 'Success': 'Profile Updated Successfully!!', 'username': doc.username });
+        } else {
+            console.log('Error during record update : ' + err);
+        }
+    });
 });
 
 
