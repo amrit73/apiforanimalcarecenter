@@ -1,11 +1,31 @@
 var express = require('express');
 var router = express.Router();
+var Feedback = require('../models/feedback');
 var async = require("async");
 var User = require('../models/user');
 const path = require('path')
 const multer = require('multer')
 
 
+router.post('/contact', (req, res) => {
+    res.header("allow-file-access-from-files", "*");
+    var feedback = new Feedback();
+
+    feedback.name = req.body.name;
+    feedback.phone = req.body.phone;
+    feedback.email = req.body.email;
+    feedback.message = req.body.message;
+
+
+    console.log(feedback);
+    feedback.save((err, doc) => {
+        if (err) {
+            res.send({ 'Success': 'Something is wrong' });
+        } else {
+            res.send({ "Success": 'Your feedback successfully send. We will call you soon' });
+        }
+    });
+});
 
 //insert image
 var TotalImage;
@@ -40,7 +60,6 @@ router.post('/upload', upload.single('image'), (req, res) => {
         image: TotalImage
     }))
 });
-
 
 
 module.exports = router;
