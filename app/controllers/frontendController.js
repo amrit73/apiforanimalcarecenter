@@ -4,7 +4,7 @@ var Feedback = require('../models/feedback');
 var async = require("async");
 var User = require('../models/user');
 var Appointment = require('../models/appointment');
-
+var Forum = require('../models/forum');
 const path = require('path')
 const multer = require('multer')
 
@@ -82,6 +82,7 @@ router.post('/upload', upload.single('image'), (req, res) => {
         image: TotalImage
     }))
 });
+
 
 
 module.exports = router;
