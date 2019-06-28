@@ -3,10 +3,32 @@ var router = express.Router();
 var Feedback = require('../models/feedback');
 var async = require("async");
 var User = require('../models/user');
+var Appointment = require('../models/appointment');
+
 const path = require('path')
 const multer = require('multer')
 
 
+router.post('/appointment', (req, res) => {
+    var appointment = new Appointment();
+    appointment.name = req.body.name;
+    appointment.petname = req.body.petname;
+    appointment.phone = req.body.phone;
+    appointment.email = req.body.email;
+    appointment.date = req.body.date;
+    appointment.time = req.body.time;
+    appointment.message = req.body.message;
+
+
+    console.log(appointment);
+    appointment.save((err, doc) => {
+        if (err) {
+            res.send({ 'Success': 'Something is wrong' });
+        } else {
+            res.send({ "Success": 'We will call you soon' });
+        }
+    });
+});
 router.post('/contact', (req, res) => {
     res.header("allow-file-access-from-files", "*");
     var feedback = new Feedback();
