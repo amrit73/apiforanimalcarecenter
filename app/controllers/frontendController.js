@@ -83,6 +83,12 @@ router.post('/upload', upload.single('image'), (req, res) => {
     }))
 });
 
+router.get('/forum', function(req, res) {
+    Forum.find({}, function(err, forum) {
+        res.json(forum);
+    }).sort({ '_id': -1 });
+});
+
 
 
 module.exports = router;
