@@ -4,6 +4,7 @@ var Feedback = require('../models/feedback');
 var async = require("async");
 var User = require('../models/user');
 var Appointment = require('../models/appointment');
+var ForumComment = require('../models/forumComment');
 var Forum = require('../models/forum');
 const path = require('path')
 const multer = require('multer')
@@ -89,6 +90,47 @@ router.get('/forum', function(req, res) {
     }).sort({ '_id': -1 });
 });
 
+router.get('/forum_comment/:id', function(req, res) {
+    ForumComment.find({ forum_id: req.params.id }, function(err, comments) {
+        if (err) return callback(err);
+        res.json(comments);
+    }).sort({ '_id': -1 });
+});
+
+router.post('/post_comment', (req, res) => {
+    User.findOne({
+        _id: req.body._id
+    }, function(err, user) {
+        if (err) {
+            res.json({ 'Success': 'Post Failed Something is wrong. Log in first!!1' });
+        } else if (!user) {
+            res.json({ 'Success': 'Post Failed Something is wrong. Log in first!!2' });
+        } else if (user) {
+
+
+            if (user.username == req.body.username) {
+                var forumComment = new ForumComment();
+
+                forumComment.forum_id = req.body.forum_id;
+                forumComment.description = req.body.description;
+                forumComment.author = req.body.username;
+
+
+                forumComment.save((err, doc) => {
+                    if (err) {
+                        console.log('Error during record insertion : ' + err);
+                    } else {
+                        res.json({ 'Success': 'Your comment successfully posted' });
+                    }
+                });
+            } else {
+                res.json({ 'Success': 'Authentication Failed!!' });
+            }
+        }
+
+    });
+
+});
 
 
 module.exports = router;
