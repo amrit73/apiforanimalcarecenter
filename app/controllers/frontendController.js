@@ -20,14 +20,11 @@ router.post('/appointment', (req, res) => {
     appointment.time = req.body.time;
     appointment.message = req.body.message;
 
+    console.log(req.body);
 
     console.log(appointment);
-    appointment.save((err, doc) => {
-        if (err) {
-            res.send({ 'Success': 'Something is wrong' });
-        } else {
-            res.send({ "Success": 'We will call you soon' });
-        }
+    appointment.save(() => {
+        res.send({ "Success": 'We will call you soon' });
     });
 });
 router.post('/contact', (req, res) => {
